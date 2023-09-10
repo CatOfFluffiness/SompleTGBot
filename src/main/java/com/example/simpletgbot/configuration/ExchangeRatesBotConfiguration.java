@@ -1,6 +1,7 @@
 package com.example.simpletgbot.configuration;
 
 import com.example.simpletgbot.bot.ExchangeRatesBot;
+import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -16,5 +17,8 @@ public class ExchangeRatesBotConfiguration {
         api.registerBot(exchangeRatesBot);
         return api;
     }
-
+    @Bean
+    public OkHttpClient okHttpClient() {
+        return new OkHttpClient();
+    }
 }
