@@ -24,6 +24,8 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
     private static final String USD = "/usd";
     private static final String EUR = "/eur";
     private static final String HELP = "/help";
+    private static final String ALL = "/all";
+
 
     @Autowired
     private ExchangeRatesService exchangeRatesService;
@@ -46,6 +48,7 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
             }
             case USD -> usdCommand(chatId);
             case EUR -> eurCommand(chatId);
+            case ALL -> allCommand(chatId);
             case HELP -> helpCommand(chatId);
             default -> unknownCommand(chatId);
         }
@@ -95,6 +98,18 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
         } catch (ServiceException e) {
             LOG.error("Ошибка получения курса евро", e);
             formattedText = "Не удалось получить текущий курс евро. Попробуйте позже.";
+        }
+        sendMessage(chatId, formattedText);
+    }
+
+    private void allCommand(Long chatId) {
+        String formattedText;
+        try {
+            var exchangeRates = exchangeRatesService.getAllExchangeRates();
+            formattedText = String.join("\n", exchangeRates);
+        } catch (ServiceException e) {
+            LOG.error("Ошибка получения курсов валют", e);
+            formattedText = "Не удалось получить текущие курсы валют. Попробуйте позже.";
         }
         sendMessage(chatId, formattedText);
     }
